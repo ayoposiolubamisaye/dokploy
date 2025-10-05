@@ -1,6 +1,7 @@
 import { OnboardingLayout } from "@/components/layouts/onboarding-layout";
 import { AlertBlock } from "@/components/shared/alert-block";
 import { Logo } from "@/components/shared/logo";
+import { ToggleVisibilityInput } from "@/components/shared/toggle-visibility-input";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import {
@@ -293,8 +294,7 @@ export default function Home({ IS_CLOUD }: Props) {
 										<FormItem>
 											<FormLabel>Password</FormLabel>
 											<FormControl>
-												<Input
-													type="password"
+												<ToggleVisibilityInput
 													placeholder="Enter your password"
 													{...field}
 												/>
