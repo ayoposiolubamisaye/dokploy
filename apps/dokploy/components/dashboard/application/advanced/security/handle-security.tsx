@@ -71,7 +71,7 @@ export const HandleSecurity = ({
 	useEffect(() => {
 		form.reset({
 			username: data?.username || "",
-			password: data?.password || "",
+			password: "", // Never pre-fill password for security
 		});
 	}, [form, form.reset, form.formState.isSubmitSuccessful, data]);
 
@@ -152,7 +152,10 @@ export const HandleSecurity = ({
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<ToggleVisibilityInput placeholder="test" {...field} />
+											<ToggleVisibilityInput 
+												placeholder="Enter password" 
+												{...field} 
+											/>
 										</FormControl>
 
 										<FormMessage />
