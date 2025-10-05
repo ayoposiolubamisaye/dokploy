@@ -39,6 +39,7 @@ export const SecurePasswordDisplay = ({ password, className = "" }: SecurePasswo
 				}}
 			/>
 			<Button
+				type="button"
 				variant="ghost"
 				size="icon"
 				onClick={copyToClipboard}
@@ -48,6 +49,7 @@ export const SecurePasswordDisplay = ({ password, className = "" }: SecurePasswo
 				<Clipboard className="size-4 text-muted-foreground" />
 			</Button>
 			<Button 
+				type="button"
 				variant="ghost"
 				size="icon"
 				onClick={togglePasswordVisibility}
