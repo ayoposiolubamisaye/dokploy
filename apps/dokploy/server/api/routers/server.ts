@@ -52,8 +52,14 @@ export const serverRouter = createTRPCRouter({
 						message: "You cannot create more servers",
 					});
 				}
+				// Trim whitespace from IP address and username to prevent SSH connection failures
+				const trimmedInput = {
+					...input,
+					ipAddress: input.ipAddress?.trim() || "",
+					username: input.username?.trim() || "root",
+				};
 				const project = await createServer(
-					input,
+					trimmedInput,
 					ctx.session.activeOrganizationId,
 				);
 				return project;
@@ -367,8 +373,14 @@ export const serverRouter = createTRPCRouter({
 						message: "Server is inactive",
 					});
 				}
-				const currentServer = await updateServerById(input.serverId, {
+				// Trim whitespace from IP address and username to prevent SSH connection failures
+				const trimmedInput = {
 					...input,
+					ipAddress: input.ipAddress?.trim() || "",
+					username: input.username?.trim() || "root",
+				};
+				const currentServer = await updateServerById(input.serverId, {
+					...trimmedInput,
 				});
 
 				return currentServer;

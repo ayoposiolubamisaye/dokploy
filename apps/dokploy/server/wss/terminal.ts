@@ -136,9 +136,9 @@ export const setupTerminalWebSocketServer = (
 			}
 
 			connectionDetails = {
-				host,
+				host: host?.trim(),
 				port,
-				username,
+				username: username?.trim(),
 				privateKey: sshKey?.privateKey,
 			};
 		}

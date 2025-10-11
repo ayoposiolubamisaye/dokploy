@@ -78,9 +78,9 @@ export const setupDeploymentLogsWebSocketServer = (
 						ws.close(); // Cierra el WebSocket si hay un error con SSH
 					})
 					.connect({
-						host: server.ipAddress,
+						host: server.ipAddress?.trim(),
 						port: server.port,
-						username: server.username,
+						username: server.username?.trim(),
 						privateKey: server.sshKey?.privateKey,
 					});
 

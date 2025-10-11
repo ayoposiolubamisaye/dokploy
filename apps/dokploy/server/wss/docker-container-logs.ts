@@ -90,9 +90,9 @@ export const setupDockerContainerLogsWebSocketServer = (
 						client.end();
 					})
 					.connect({
-						host: server.ipAddress,
+						host: server.ipAddress?.trim(),
 						port: server.port,
-						username: server.username,
+						username: server.username?.trim(),
 						privateKey: server.sshKey?.privateKey,
 					});
 				ws.on("close", () => {

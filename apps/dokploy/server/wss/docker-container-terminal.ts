@@ -98,9 +98,9 @@ export const setupDockerContainerTerminalWebSocketServer = (
 						);
 					})
 					.connect({
-						host: server.ipAddress,
+						host: server.ipAddress?.trim(),
 						port: server.port,
-						username: server.username,
+						username: server.username?.trim(),
 						privateKey: server.sshKey?.privateKey,
 					});
 			} else {
