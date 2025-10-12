@@ -1,6 +1,7 @@
 import { OnboardingLayout } from "@/components/layouts/onboarding-layout";
 import { AlertBlock } from "@/components/shared/alert-block";
 import { Logo } from "@/components/shared/logo";
+import { ToggleVisibilityInput } from "@/components/shared/toggle-visibility-input";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import {
@@ -125,9 +126,8 @@ export default function Home({ tokenResetPassword }: Props) {
 											<FormItem>
 												<FormLabel>Password</FormLabel>
 												<FormControl>
-													<Input
-														type="password"
-														placeholder="Password"
+													<ToggleVisibilityInput
+														placeholder="Enter new password"
 														{...field}
 													/>
 												</FormControl>
@@ -142,9 +142,8 @@ export default function Home({ tokenResetPassword }: Props) {
 											<FormItem>
 												<FormLabel>Confirm Password</FormLabel>
 												<FormControl>
-													<Input
-														type="password"
-														placeholder="Password"
+													<ToggleVisibilityInput
+														placeholder="Confirm new password"
 														{...field}
 													/>
 												</FormControl>

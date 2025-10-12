@@ -1,4 +1,5 @@
 import { AlertBlock } from "@/components/shared/alert-block";
+import { ToggleVisibilityInput } from "@/components/shared/toggle-visibility-input";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -70,7 +71,7 @@ export const HandleSecurity = ({
 	useEffect(() => {
 		form.reset({
 			username: data?.username || "",
-			password: data?.password || "",
+			password: "", // Never pre-fill password for security
 		});
 	}, [form, form.reset, form.formState.isSubmitSuccessful, data]);
 
@@ -151,7 +152,10 @@ export const HandleSecurity = ({
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input placeholder="test" {...field} />
+											<ToggleVisibilityInput 
+												placeholder="Enter password" 
+												{...field} 
+											/>
 										</FormControl>
 
 										<FormMessage />

@@ -1,6 +1,7 @@
 import { OnboardingLayout } from "@/components/layouts/onboarding-layout";
 import { AlertBlock } from "@/components/shared/alert-block";
 import { Logo } from "@/components/shared/logo";
+import { ToggleVisibilityInput } from "@/components/shared/toggle-visibility-input";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import {
@@ -232,9 +233,8 @@ const Invitation = ({
 														<FormItem>
 															<FormLabel>Password</FormLabel>
 															<FormControl>
-																<Input
-																	type="password"
-																	placeholder="Password"
+																<ToggleVisibilityInput
+																	placeholder="Enter password"
 																	{...field}
 																/>
 															</FormControl>
@@ -250,9 +250,8 @@ const Invitation = ({
 														<FormItem>
 															<FormLabel>Confirm Password</FormLabel>
 															<FormControl>
-																<Input
-																	type="password"
-																	placeholder="Confirm Password"
+																<ToggleVisibilityInput
+																	placeholder="Confirm password"
 																	{...field}
 																/>
 															</FormControl>
