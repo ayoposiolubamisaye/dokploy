@@ -49,7 +49,9 @@ export const UserNav = () => {
 						<AvatarFallback className="rounded-lg">CN</AvatarFallback>
 					</Avatar>
 					<div className="grid flex-1 text-left text-sm leading-tight">
-						<span className="truncate font-semibold">Account</span>
+						<span className="truncate font-semibold">
+							{data?.user?.name || "Account"}
+						</span>
 						<span className="truncate text-xs">{data?.user?.email}</span>
 					</div>
 					<ChevronsUpDown className="ml-auto size-4" />
@@ -63,7 +65,7 @@ export const UserNav = () => {
 			>
 				<div className="flex items-center justify-between px-2 py-1.5">
 					<DropdownMenuLabel className="flex flex-col">
-						My Account
+						{data?.user?.name || "My Account"}
 						<span className="text-xs font-normal text-muted-foreground">
 							{data?.user?.email}
 						</span>
