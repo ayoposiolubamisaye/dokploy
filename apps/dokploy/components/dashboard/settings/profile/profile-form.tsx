@@ -58,7 +58,7 @@ const randomImages = [
 ];
 
 export const ProfileForm = () => {
-	const _utils = api.useUtils();
+	const utils = api.useUtils();
 	const { data, refetch, isLoading } = api.user.get.useQuery();
 	const { data: isCloud } = api.settings.isCloud.useQuery();
 
@@ -125,7 +125,8 @@ export const ProfileForm = () => {
 			allowImpersonation: values.allowImpersonation,
 		})
 			.then(async () => {
-				await refetch();
+				// Invalidate all user queries to refresh data across components
+				await utils.user.get.invalidate();
 				toast.success("Profile Updated");
 				form.reset({
 					name: values.name,
