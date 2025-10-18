@@ -34,6 +34,30 @@ export const UserNav = () => {
 	const { locale, setLocale } = useLocale();
 	// const { mutateAsync } = api.auth.logout.useMutation();
 
+	// Generate initials from user name or email
+	const getUserInitials = (name?: string, email?: string) => {
+		if (name && name.trim()) {
+			// Use name initials
+			const nameParts = name.trim().split(' ');
+			if (nameParts.length >= 2) {
+				return `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase();
+			}
+			return nameParts[0][0].toUpperCase();
+		}
+		
+		if (email) {
+			// Fallback to email initials
+			const emailParts = email.split('@')[0];
+			if (emailParts.length >= 2) {
+				return `${emailParts[0]}${emailParts[emailParts.length - 1]}`.toUpperCase();
+			}
+			return emailParts[0].toUpperCase();
+		}
+		
+		// Final fallback
+		return "CN";
+	};
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -46,7 +70,9 @@ export const UserNav = () => {
 							src={data?.user?.image || ""}
 							alt={data?.user?.image || ""}
 						/>
-						<AvatarFallback className="rounded-lg">CN</AvatarFallback>
+						<AvatarFallback className="rounded-lg">
+							{getUserInitials(data?.user?.name, data?.user?.email)}
+						</AvatarFallback>
 					</Avatar>
 					<div className="grid flex-1 text-left text-sm leading-tight">
 						<span className="truncate font-semibold">
