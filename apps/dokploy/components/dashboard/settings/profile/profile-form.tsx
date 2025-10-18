@@ -117,7 +117,7 @@ export const ProfileForm = () => {
 
 	const onSubmit = async (values: Profile) => {
 		await mutateAsync({
-			name: values.name || undefined,
+			name: values.name?.trim() || "",  // Send empty string to clear name, not undefined
 			email: values.email.toLowerCase(),
 			password: values.password || undefined,
 			image: values.image,
