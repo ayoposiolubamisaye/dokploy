@@ -145,6 +145,25 @@ export const userRouter = createTRPCRouter({
 	update: protectedProcedure
 		.input(apiUpdateUser)
 		.mutation(async ({ input, ctx }) => {
+			// Validate email if provided
+			if (input.email !== undefined) {
+				if (!input.email || input.email.trim() === "") {
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message: "Email is required and cannot be empty",
+					});
+				}
+				
+				// Basic email format validation
+				const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+				if (!emailRegex.test(input.email)) {
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message: "Please enter a valid email address",
+					});
+				}
+			}
+
 			if (input.password || input.currentPassword) {
 				const currentAuth = await db.query.account.findFirst({
 					where: eq(account.userId, ctx.user.id),

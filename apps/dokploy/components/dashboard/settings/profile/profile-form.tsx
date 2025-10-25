@@ -33,7 +33,9 @@ import { Enable2FA } from "./enable-2fa";
 
 const profileSchema = z.object({
 	name: z.string().optional(),
-	email: z.string(),
+	email: z.string()
+		.min(1, "Email is required")
+		.email("Please enter a valid email address"),
 	password: z.string().nullable(),
 	currentPassword: z.string().nullable(),
 	image: z.string().optional(),
@@ -202,6 +204,9 @@ export const ProfileForm = () => {
 																{...field}
 															/>
 														</FormControl>
+														<FormDescription>
+															Your email address is required for account authentication and notifications.
+														</FormDescription>
 														<FormMessage />
 													</FormItem>
 												)}
