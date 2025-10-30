@@ -22,7 +22,7 @@ import { Switch } from "@/components/ui/switch";
 import { generateSHA256Hash } from "@/lib/utils";
 import { api } from "@/utils/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, User } from "lucide-react";
+import { ImagePlus, Loader2, Upload, User } from "lucide-react";
 import { useTranslation } from "next-i18next";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -80,7 +80,7 @@ export const ProfileForm = () => {
 		]);
 	}, [gravatarHash]);
 
-	const form = useForm<Profile>({
+    const form = useForm<Profile>({
 		defaultValues: {
 			name: data?.user?.name || "",
 			email: data?.user?.email || "",
@@ -91,6 +91,34 @@ export const ProfileForm = () => {
 		},
 		resolver: zodResolver(profileSchema),
 	});
+
+    const [uploadPreview, setUploadPreview] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
+
+    const handleImageFile = async (file: File) => {
+        // Validate type and size (<= 2MB)
+        if (!file.type.startsWith("image/")) {
+            toast.error("Please select a valid image file");
+            return;
+        }
+        const maxBytes = 2 * 1024 * 1024; // 2MB
+        if (file.size > maxBytes) {
+            toast.error("Image must be 2MB or less");
+            return;
+        }
+        setIsUploading(true);
+        try {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = reader.result as string;
+                setUploadPreview(dataUrl);
+                form.setValue("image", dataUrl, { shouldDirty: true });
+            };
+            reader.readAsDataURL(file);
+        } finally {
+            setIsUploading(false);
+        }
+    };
 
 	useEffect(() => {
 		if (data) {
@@ -250,7 +278,7 @@ export const ProfileForm = () => {
 												)}
 											/>
 
-											<FormField
+                                            <FormField
 												control={form.control}
 												name="image"
 												render={({ field }) => (
@@ -259,7 +287,7 @@ export const ProfileForm = () => {
 															{t("settings.profile.avatar")}
 														</FormLabel>
 														<FormControl>
-															<RadioGroup
+                                                            <RadioGroup
 																onValueChange={(e) => {
 																	field.onChange(e);
 																}}
@@ -267,6 +295,51 @@ export const ProfileForm = () => {
 																value={field.value}
 																className="flex flex-row flex-wrap gap-2 max-xl:justify-center"
 															>
+                                                                {/* Upload option */}
+                                                                <FormItem key="__upload__">
+                                                                    <FormLabel className="[&:has([data-state=checked])>div]:border-primary [&:has([data-state=checked])>div]:border-1 [&:has([data-state=checked])>div]:p-px cursor-pointer">
+                                                                        <FormControl>
+                                                                            <RadioGroupItem
+                                                                                value={uploadPreview || "__upload__"}
+                                                                                className="sr-only"
+                                                                            />
+                                                                        </FormControl>
+                                                                        <div className="h-12 w-12 rounded-full border flex items-center justify-center overflow-hidden relative">
+                                                                            {uploadPreview || (typeof field.value === "string" && field.value.startsWith("data:image")) ? (
+                                                                                <img
+                                                                                    src={(uploadPreview as string) || field.value}
+                                                                                    alt="uploaded avatar"
+                                                                                    className="h-12 w-12 object-cover"
+                                                                                />
+                                                                            ) : (
+                                                                                <button
+                                                                                    type="button"
+                                                                                    onClick={() => document.getElementById("avatar-file-input")?.click()}
+                                                                                    className="h-full w-full flex items-center justify-center text-muted-foreground hover:text-foreground"
+                                                                                >
+                                                                                    {isUploading ? (
+                                                                                        <Loader2 className="size-4 animate-spin" />
+                                                                                    ) : (
+                                                                                        <ImagePlus className="size-5" />
+                                                                                    )}
+                                                                                </button>
+                                                                            )}
+                                                                            <input
+                                                                                id="avatar-file-input"
+                                                                                type="file"
+                                                                                accept="image/*"
+                                                                                className="hidden"
+                                                                                onChange={(e) => {
+                                                                                    const file = e.target.files?.[0];
+                                                                                    if (file) {
+                                                                                        void handleImageFile(file);
+                                                                                    }
+                                                                                }}
+                                                                            />
+                                                                        </div>
+                                                                    </FormLabel>
+                                                                </FormItem>
+
 																{availableAvatars.map((image) => (
 																	<FormItem key={image}>
 																		<FormLabel className="[&:has([data-state=checked])>img]:border-primary [&:has([data-state=checked])>img]:border-1 [&:has([data-state=checked])>img]:p-px cursor-pointer">
