@@ -61,6 +61,10 @@ export const DuplicateProject = ({
 		api.project.duplicate.useMutation({
 			onSuccess: async (newProject) => {
 				await utils.project.all.invalidate();
+				// Invalidate the current project query when duplicating to same project
+				if (duplicateType === "same-project") {
+					await utils.project.one.invalidate({ projectId });
+				}
 				toast.success(
 					duplicateType === "new-project"
 						? "Project duplicated successfully"
@@ -77,15 +81,15 @@ export const DuplicateProject = ({
 		});
 
 	const handleDuplicate = async () => {
-		if (duplicateType === "new-project" && !name) {
+		if (duplicateType === "new-project" && !name.trim()) {
 			toast.error("Project name is required");
 			return;
 		}
 
 		await duplicateProject({
 			sourceProjectId: projectId,
-			name,
-			description,
+			name: duplicateType === "new-project" ? name : undefined,
+			description: duplicateType === "new-project" ? description : undefined,
 			includeServices: true,
 			selectedServices: selectedServices.map((service) => ({
 				id: service.id,
@@ -150,6 +154,7 @@ export const DuplicateProject = ({
 									value={name}
 									onChange={(e) => setName(e.target.value)}
 									placeholder="New project name"
+									required
 								/>
 							</div>
 

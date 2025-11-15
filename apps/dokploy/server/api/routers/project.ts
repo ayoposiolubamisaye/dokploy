@@ -288,29 +288,43 @@ export const projectRouter = createTRPCRouter({
 		}),
 	duplicate: protectedProcedure
 		.input(
-			z.object({
-				sourceProjectId: z.string(),
-				name: z.string(),
-				description: z.string().optional(),
-				includeServices: z.boolean().default(true),
-				selectedServices: z
-					.array(
-						z.object({
-							id: z.string(),
-							type: z.enum([
-								"application",
-								"postgres",
-								"mariadb",
-								"mongo",
-								"mysql",
-								"redis",
-								"compose",
-							]),
-						}),
-					)
-					.optional(),
-				duplicateInSameProject: z.boolean().default(false),
-			}),
+			z
+				.object({
+					sourceProjectId: z.string(),
+					name: z.string().optional(),
+					description: z.string().optional(),
+					includeServices: z.boolean().default(true),
+					selectedServices: z
+						.array(
+							z.object({
+								id: z.string(),
+								type: z.enum([
+									"application",
+									"postgres",
+									"mariadb",
+									"mongo",
+									"mysql",
+									"redis",
+									"compose",
+								]),
+							}),
+						)
+						.optional(),
+					duplicateInSameProject: z.boolean().default(false),
+				})
+				.refine(
+					(data) => {
+						// Name is required when duplicating to a new project
+						if (!data.duplicateInSameProject) {
+							return data.name !== undefined && data.name.trim().length > 0;
+						}
+						return true;
+					},
+					{
+						message: "Project name is required when duplicating to a new project",
+						path: ["name"],
+					},
+				),
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
@@ -337,7 +351,8 @@ export const projectRouter = createTRPCRouter({
 					? sourceProject
 					: await createProject(
 							{
-								name: input.name,
+								// refine ensures name is defined and non-empty when duplicateInSameProject is false
+								name: input.name!,
 								description: input.description,
 								env: sourceProject.env,
 							},
