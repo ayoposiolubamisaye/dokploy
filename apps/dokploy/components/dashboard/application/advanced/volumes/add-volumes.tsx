@@ -1,3 +1,4 @@
+import { AlertBlock } from "@/components/shared/alert-block";
 import { CodeEditor } from "@/components/shared/code-editor";
 import { Button } from "@/components/ui/button";
 import {
@@ -252,6 +253,29 @@ export const AddVolumes = ({
 								</FormItem>
 							)}
 						/>
+						{type === "bind" && (
+							<AlertBlock type="warning">
+								<div className="flex flex-col gap-2">
+									<span className="font-medium">
+										Important: Bind Mount Requirements
+									</span>
+									<ul className="list-disc list-inside space-y-1 text-sm">
+										<li>
+											The host path must be valid and exist on the host machine.
+										</li>
+										<li>
+											In cluster environments, the path must exist on{" "}
+											<strong>all nodes</strong>, otherwise deployment may fail.
+										</li>
+									</ul>
+									<span className="text-sm">
+										<strong>Consider alternatives:</strong> For cluster deployments,
+										consider using named volumes or external distribution tools
+										instead of bind mounts to avoid node-specific path issues.
+									</span>
+								</div>
+							</AlertBlock>
+						)}
 						<div className="flex flex-col gap-4">
 							<FormLabel className="text-lg font-semibold leading-none tracking-tight">
 								Fill the next fields.
