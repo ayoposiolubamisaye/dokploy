@@ -64,6 +64,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useSearchShortcut } from "@/hooks/useSearchShortcut";
 import { cn } from "@/lib/utils";
 import { appRouter } from "@/server/api/root";
 import { api } from "@/utils/api";
@@ -91,7 +92,7 @@ import type {
 } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { type ReactElement, useEffect, useMemo, useState } from "react";
+import { type ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import superjson from "superjson";
 
@@ -275,6 +276,7 @@ const Project = (
 	const applications = extractServices(data);
 
 	const [searchQuery, setSearchQuery] = useState("");
+	const searchInputRef = useRef<HTMLInputElement>(null);
 	const serviceTypes = [
 		{ value: "application", label: "Application", icon: GlobeIcon },
 		{ value: "postgres", label: "PostgreSQL", icon: PostgresqlIcon },
@@ -289,6 +291,8 @@ const Project = (
 	const [openCombobox, setOpenCombobox] = useState(false);
 	const [selectedServices, setSelectedServices] = useState<string[]>([]);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+	useSearchShortcut(searchInputRef);
 
 	const handleSelectAll = () => {
 		if (selectedServices.length === filteredServices.length) {
@@ -846,6 +850,7 @@ const Project = (
 										<div className="flex flex-col gap-2 lg:flex-row lg:gap-4 lg:items-center">
 											<div className="w-full relative">
 												<Input
+													ref={searchInputRef}
 													placeholder="Filter services..."
 													value={searchQuery}
 													onChange={(e) => setSearchQuery(e.target.value)}

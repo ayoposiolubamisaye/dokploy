@@ -38,6 +38,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useSearchShortcut } from "@/hooks/useSearchShortcut";
 import { api } from "@/utils/api";
 import {
 	AlertTriangle,
@@ -50,7 +51,7 @@ import {
 	TrashIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { HandleProject } from "./handle-project";
 import { ProjectEnvironment } from "./project-environment";
@@ -60,6 +61,7 @@ export const ShowProjects = () => {
 	const { data, isLoading } = api.project.all.useQuery();
 	const { data: auth } = api.user.get.useQuery();
 	const { mutateAsync } = api.project.remove.useMutation();
+	const searchInputRef = useRef<HTMLInputElement>(null);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sortBy, setSortBy] = useState<string>(() => {
 		if (typeof window !== "undefined") {
@@ -71,6 +73,8 @@ export const ShowProjects = () => {
 	useEffect(() => {
 		localStorage.setItem("projectsSort", sortBy);
 	}, [sortBy]);
+
+	useSearchShortcut(searchInputRef);
 
 	const filteredAndSortedProjects = useMemo(() => {
 		if (!data) return [];
@@ -160,6 +164,7 @@ export const ShowProjects = () => {
 									<div className="flex flex-col sm:flex-row gap-4 w-full">
 										<div className="w-full sm:flex-1 relative">
 											<Input
+												ref={searchInputRef}
 												placeholder="Filter projects..."
 												value={searchQuery}
 												onChange={(e) => setSearchQuery(e.target.value)}
